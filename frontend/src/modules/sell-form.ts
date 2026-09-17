@@ -24,7 +24,7 @@ async function uploadArtworkImage(file: File): Promise<string> {
 
 function fillFormForEdit(form: HTMLFormElement, listing: Listing): void {
   document.title = '作品を編集する — GALLERY 0';
-  for (const field of ['title', 'price', 'category', 'productionYear', 'material', 'width', 'height', 'description']) {
+  for (const field of ['title', 'artist', 'price', 'category', 'productionYear', 'material', 'width', 'height', 'description']) {
     const input = form.elements.namedItem(field) as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | null;
     if (input && listing[field] !== undefined) input.value = listing[field];
   }

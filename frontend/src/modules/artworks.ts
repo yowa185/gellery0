@@ -71,6 +71,7 @@ const STATIC_ARTWORKS: Artwork[] = [
 type StoredListing = {
   id: string;
   title: string;
+  artist?: string;
   price: string;
   category: string;
   productionYear?: string;
@@ -88,7 +89,7 @@ function getStoredListings(): Artwork[] {
   return raw.map((item) => ({
     id: item.id,
     title: item.title,
-    artist: 'GALLERY 0 VISITOR',
+    artist: item.artist || 'GALLERY 0 VISITOR',
     price: Number(item.price) || 0,
     image: item.imageUrl,
     category: item.category,
@@ -117,5 +118,5 @@ export function isOwnListing(id: string): boolean {
 }
 
 export function formatPrice(artwork: Pick<Artwork, 'price' | 'status'>): string {
-  return artwork.status === 'SOLD' ? 'SOLD' : `₩ ${artwork.price.toLocaleString()}`;
+  return artwork.status === 'SOLD' ? 'SOLD' : `¥ ${artwork.price.toLocaleString()}`;
 }

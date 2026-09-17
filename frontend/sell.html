@@ -12,7 +12,6 @@
       <a class="logo" href="/index.html">GALLERY <i>0</i></a>
       <nav>
         <a href="/collection.html">作品</a
-        ><a href="/artists.html">アーティスト</a
         ><a href="/about.html">私たちについて</a>
       </nav>
       <a class="header-cta" href="/collection.html"
@@ -32,6 +31,11 @@
             name="title"
             required
             placeholder="例：Blue Room" /></label
+        ><label
+          >アーティスト名<input
+            name="artist"
+            required
+            placeholder="例：キム・ダヘ" /></label
         ><label
           >価格（JPY）
           <input
@@ -74,11 +78,11 @@
             step="0.01"
             placeholder="45.5" /></label
         ><label class="full"
-          >作品画像<input
+          >作品画像・動画<input
             name="imageFile"
             required
             type="file"
-            accept="image/*" /></label
+            accept="image/*,video/*" /></label
         ><label class="full"
           >作品説明<textarea
             name="description"
