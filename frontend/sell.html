@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>作品を出品する — GALLERY 0</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body data-page="sell">
+    <header class="header">
+      <a class="logo" href="/index.html">GALLERY <i>0</i></a>
+      <nav>
+        <a href="/collection.html">作品</a
+        ><a href="/artists.html">アーティスト</a
+        ><a href="/about.html">私たちについて</a>
+      </nav>
+      <a class="header-cta" href="/collection.html"
+        >COLLECT ART <span>↗</span></a
+      >
+    </header>
+    <main class="sell-page">
+      <p class="kicker">SELL YOUR ARTWORK</p>
+      <h1>作品を<br /><em>出品する。</em></h1>
+      <p class="sell-intro">
+        作品の情報を入力してください。登録後、GALLERY
+        0のコレクションに掲載されます。
+      </p>
+      <form class="sell-form">
+        <label
+          >作品名<input
+            name="title"
+            required
+            placeholder="例：Blue Room" /></label
+        ><label
+          >価格（JPY）
+          <input
+            name="price"
+            required
+            type="number"
+            min="0"
+            placeholder="800000" /></label
+        ><label
+          >カテゴリー<select name="category">
+            <option>Painting</option>
+            <option>Photography</option>
+            <option>Object</option>
+            <option>Drawing</option>
+          </select></label
+        ><label
+          >制作年<input
+            name="productionYear"
+            required
+            type="number"
+            min="1000"
+            max="9999"
+            placeholder="2026" /></label
+        ><label
+          >素材<input name="material" placeholder="例：Oil on canvas" /></label
+        ><label
+          >幅（cm）<input
+            name="width"
+            required
+            type="number"
+            min="0.01"
+            step="0.01"
+            placeholder="53" /></label
+        ><label
+          >高さ（cm）<input
+            name="height"
+            required
+            type="number"
+            min="0.01"
+            step="0.01"
+            placeholder="45.5" /></label
+        ><label class="full"
+          >画像 URL<input
+            name="imageUrl"
+            required
+            type="url"
+            placeholder="https://..." /></label
+        ><label class="full"
+          >作品説明<textarea
+            name="description"
+            placeholder="作品についての説明を入力してください。"
+          ></textarea></label
+        ><button class="button" type="submit">作品を登録する <b>→</b></button>
+      </form>
+      <p class="sell-success" role="status">
+        作品を登録しました。コレクションへの掲載準備ができました。
+      </p>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

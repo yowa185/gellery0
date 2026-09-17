@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="GALLERY 0 — 작가와 작품을 직접 만나는 온라인 아트 마켓" />
+  <title>GALLERY 0 — Art Market</title>
+  <link rel="preconnect" href="https://images.unsplash.com" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="announcement"><span>NEW SEASON</span><p>독립 작가들의 새로운 작업을 만나보세요.</p><button aria-label="공지 닫기">×</button></div>
+  <header class="site-header">
+    <a href="#top" class="brand" aria-label="GALLERY 0 홈">GALLERY <i>0</i></a>
+    <nav aria-label="주요 메뉴"><a href="#collection">COLLECTION</a><a href="#artists">ARTISTS</a><a href="#about">ABOUT</a></nav>
+    <div class="header-actions"><button class="search-toggle" aria-label="작품 검색">⌕</button><button class="menu-toggle" aria-label="메뉴 열기"><span></span><span></span></button></div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy"><p class="eyebrow">CONTEMPORARY ART MARKET</p><h1>ART IS<br><em>FOR EVERYDAY.</em></h1><p class="hero-description">좋은 작품은 당신의 하루를 바꿉니다.<br>새로운 시선과 함께 살아갈 작품을 발견하세요.</p><a class="text-link" href="#collection">작품 둘러보기 <b>↘</b></a></div>
+      <div class="hero-art" aria-label="추상 회화 작품 이미지"><div class="hero-frame"><img src="https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&w=1200&q=85" alt="푸른색과 붉은색이 어우러진 추상 회화" /></div><p class="art-caption">Blue Composition, 2024<br><span>JUNG DAHYE</span></p></div>
+      <div class="hero-index">01 <span></span> 04</div>
+    </section>
+
+    <section class="intro" id="about"><p class="eyebrow">OUR POINT OF VIEW</p><h2>예술은 더 가까이,<br>작가는 더 <em>선명하게.</em></h2><p>GALLERY 0는 동시대 작가의 작업을 소개하고, 작품이 누군가의 일상에 자연스럽게 닿도록 돕는 온라인 아트 마켓입니다.</p></section>
+
+    <section class="collection" id="collection">
+      <div class="section-heading"><div><p class="eyebrow">CURATED SELECTION</p><h2>NEW <em>WORKS</em></h2></div><button class="filter-button" id="filterButton">FILTER <span>⌄</span></button></div>
+      <div class="filter-panel" id="filterPanel"><button data-filter="all" class="active">ALL</button><button data-filter="painting">PAINTING</button><button data-filter="photography">PHOTOGRAPHY</button><button data-filter="object">OBJECT</button></div>
+      <div class="art-grid" id="artGrid">
+        <article class="art-card" data-category="painting" data-title="Blue Room" data-artist="김다혜" data-price="₩ 800,000" data-image="https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&w=1200&q=85"><button class="art-image"><img src="https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&w=800&q=85" alt="Blue Room 작품" /><span class="view-art">VIEW WORK&nbsp; ↗</span></button><div class="art-meta"><div><h3>Blue Room</h3><p>김다혜 · 2024</p></div><strong>₩ 800,000</strong></div></article>
+        <article class="art-card offset" data-category="object" data-title="Soft Geometry" data-artist="박서윤" data-price="₩ 1,200,000" data-image="https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=1200&q=85"><button class="art-image"><img src="https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=800&q=85" alt="Soft Geometry 작품" /><span class="view-art">VIEW WORK&nbsp; ↗</span></button><div class="art-meta"><div><h3>Soft Geometry</h3><p>박서윤 · 2024</p></div><strong>₩ 1,200,000</strong></div></article>
+        <article class="art-card" data-category="photography" data-title="A Quiet Day" data-artist="이민주" data-price="SOLD" data-image="https://images.unsplash.com/photo-1544967082-d9d25d867d66?auto=format&fit=crop&w=1200&q=85"><button class="art-image"><img src="https://images.unsplash.com/photo-1544967082-d9d25d867d66?auto=format&fit=crop&w=800&q=85" alt="A Quiet Day 작품" /><span class="view-art">VIEW WORK&nbsp; ↗</span><span class="sold-label">SOLD</span></button><div class="art-meta"><div><h3>A Quiet Day</h3><p>이민주 · 2023</p></div><strong>SOLD</strong></div></article>
+      </div>
+      <a class="outline-link" href="#collection">VIEW ALL WORKS <b>↗</b></a>
+    </section>
+
+    <section class="artist-feature" id="artists"><div class="artist-photo"><img src="https://images.unsplash.com/photo-1542596768-5d1d21f1cf98?auto=format&fit=crop&w=1000&q=85" alt="작업 중인 예술가" /></div><div class="artist-copy"><p class="eyebrow">ARTIST IN FOCUS</p><h2>JUNG<br><em>DAHYE</em></h2><p>색과 감각의 층위를 쌓아, 익숙한 공간을 낯선 풍경으로 전환합니다. 김다혜 작가의 최신 회화 작업을 만나보세요.</p><a href="#collection" class="text-link">작가 이야기 보기 <b>↗</b></a><div class="artist-number">01 <span>/</span> 03</div></div></section>
+  </main>
+  <footer><a href="#top" class="brand">GALLERY <i>0</i></a><p>ART FOR EVERYDAY LIFE.</p><div><a href="#">INSTAGRAM</a><a href="#">CONTACT</a></div><small>© 2026 GALLERY 0. ALL RIGHTS RESERVED.</small></footer>
+
+  <dialog id="artDialog"><button class="modal-close" aria-label="닫기">×</button><div class="modal-image"><img src="" alt="" /></div><div class="modal-copy"><p class="eyebrow">ORIGINAL ARTWORK</p><h2></h2><p class="artist-name"></p><dl><div><dt>Material</dt><dd>Oil on canvas</dd></div><div><dt>Size</dt><dd>53 × 45.5 cm</dd></div><div><dt>Year</dt><dd>2024</dd></div></dl><p class="modal-price"></p><button class="purchase-button">구매 요청하기 <span>↗</span></button></div></dialog>
+  <div class="toast" id="toast">구매 요청이 접수되었습니다. 곧 연락드릴게요.</div>
+  <script src="/app.js"></script>
+</body>
+</html>
