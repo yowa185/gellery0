@@ -24,7 +24,8 @@ CREATE TABLE artworks (
     height NUMERIC(8, 2) CHECK (height > 0),
     material VARCHAR(200),
     production_year INTEGER CHECK (production_year BETWEEN 1000 AND 9999),
-    category VARCHAR(50) NOT NULL,
+    category VARCHAR(50) NOT NULL
+        CHECK (category IN ('PAINTING', 'PHOTOGRAPHY', 'OBJECT', 'VIDEO')),
     image_url VARCHAR(1000) NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'ON_SALE'
         CHECK (status IN ('ON_SALE', 'RESERVED', 'SOLD')),

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>作品を出品する — GALLERY 0</title>
     <link rel="stylesheet" href="/src/styles.css" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   </head>
   <body data-page="sell">
     <header class="header">
@@ -41,10 +42,10 @@
             placeholder="800000" /></label
         ><label
           >カテゴリー<select name="category">
-            <option>Painting</option>
-            <option>Photography</option>
-            <option>Object</option>
-            <option>Drawing</option>
+            <option value="PAINTING">Painting</option>
+            <option value="PHOTOGRAPHY">Photography</option>
+            <option value="OBJECT">Object</option>
+            <option value="VIDEO">Video</option>
           </select></label
         ><label
           >制作年<input
@@ -73,11 +74,11 @@
             step="0.01"
             placeholder="45.5" /></label
         ><label class="full"
-          >画像 URL<input
-            name="imageUrl"
+          >作品画像<input
+            name="imageFile"
             required
-            type="url"
-            placeholder="https://..." /></label
+            type="file"
+            accept="image/*" /></label
         ><label class="full"
           >作品説明<textarea
             name="description"

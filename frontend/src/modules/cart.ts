@@ -2,7 +2,7 @@ import type { CartItem } from './types';
 import { showToast } from './toast';
 
 const CART_KEY = 'gallery0-cart';
-const REQUEST_KEY = 'gallery0-requests';
+export const REQUEST_KEY = 'gallery0-requests';
 
 const getCart = (): CartItem[] => JSON.parse(localStorage.getItem(CART_KEY) ?? '[]');
 const saveCart = (items: CartItem[]): void => localStorage.setItem(CART_KEY, JSON.stringify(items));
@@ -23,7 +23,10 @@ function renderCart(): void {
   content.querySelector<HTMLButtonElement>('.cart-request')?.addEventListener('click', () => {
     const itemsToRequest = getCart();
     if (!itemsToRequest.length) return;
-    localStorage.setItem(REQUEST_KEY, JSON.stringify(itemsToRequest));
+    const requestedAt = new Date().toISOString();
+    const existingRequests: CartItem[] = JSON.parse(localStorage.getItem(REQUEST_KEY) ?? '[]');
+    const newRequests = itemsToRequest.map((item) => ({ ...item, createdAt: requestedAt }));
+    localStorage.setItem(REQUEST_KEY, JSON.stringify([...existingRequests, ...newRequests]));
     saveCart([]); renderCart(); closeCart();
     showToast(`${itemsToRequest.length}点の購入リクエストを送信しました。`);
   });

@@ -372,6 +372,15 @@ dd {
   font-size: 10px;
   margin-top: 16px;
 }
+.artwork-description {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #cfcfca;
+  margin: 26px 0 0;
+}
+.artwork-description:empty {
+  display: none;
+}
 .artist-list {
   margin-top: 90px;
   border-top: 1px solid var(--line);
@@ -578,14 +587,39 @@ footer small {
     white-space: nowrap;
   }
 }
-.cart-button {
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-left: auto;
+}
+.action-button {
+  display: inline-flex;
+  align-items: center;
   background: none;
   border: 0;
   color: var(--white);
   font: 10px "DM Mono";
   letter-spacing: 0.1em;
-  padding: 12px 0 12px 22px;
+  text-decoration: none;
   cursor: pointer;
+}
+.sell-button {
+  border: 1px solid #555;
+  padding: 11px 14px;
+}
+.profile-button span {
+  display: inline-grid;
+  place-items: center;
+  width: 17px;
+  height: 17px;
+  margin-right: 7px;
+  border: 1px solid #777;
+  border-radius: 50%;
+  font-size: 8px;
+}
+.cart-button {
+  padding: 12px 0 12px 22px;
 }
 .cart-button span {
   display: inline-grid;
@@ -627,26 +661,26 @@ footer small {
   opacity: 1;
   visibility: visible;
 }
-.cart-head {
+.panel-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--line);
   padding-bottom: 22px;
 }
-.cart-head p {
+.panel-head p {
   font: 11px "DM Mono";
   letter-spacing: 0.1em;
   margin: 0;
 }
-.cart-close,
+.panel-close,
 .cart-remove {
   background: none;
   color: var(--white);
   border: 0;
   cursor: pointer;
 }
-.cart-close {
+.panel-close {
   font-size: 27px;
 }
 .cart-contents {
@@ -659,6 +693,7 @@ footer small {
   align-items: center;
   padding: 16px 0;
   border-bottom: 1px solid var(--line);
+  text-decoration: none;
 }
 .cart-item img {
   width: 76px;
@@ -680,6 +715,12 @@ footer small {
 .cart-remove {
   font-size: 24px;
   color: var(--gray);
+}
+.cart-item-status {
+  font: 9px "DM Mono";
+  letter-spacing: 0.08em;
+  color: var(--gray);
+  white-space: nowrap;
 }
 .cart-request {
   width: 100%;
@@ -711,6 +752,83 @@ footer small {
 .cart-empty p {
   font-size: 14px;
   margin: 18px 0 8px;
+}
+.profile-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  border: 0;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 20;
+  transition: 0.25s;
+}
+.profile-panel {
+  position: fixed;
+  z-index: 21;
+  right: 0;
+  top: 0;
+  width: min(410px, 100vw);
+  height: 100dvh;
+  background: #151514;
+  border-left: 1px solid var(--line);
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  padding: 28px;
+  overflow-y: auto;
+}
+.profile-open .profile-panel {
+  transform: translateX(0);
+}
+.profile-open .profile-backdrop {
+  opacity: 1;
+  visibility: visible;
+}
+.profile-user {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--line);
+}
+.profile-user span {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid #777;
+  font: 11px "DM Mono";
+  flex-shrink: 0;
+}
+.profile-user b {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+}
+.profile-user small {
+  font: 10px "DM Mono";
+  color: var(--gray);
+}
+.profile-section {
+  padding-top: 22px;
+}
+.profile-section h3 {
+  font: 10px "DM Mono";
+  letter-spacing: 0.1em;
+  color: var(--gray);
+  margin: 0 0 4px;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+.profile-section .cart-empty {
+  padding: 24px 0;
+}
+.profile-note {
+  font: 10px "DM Mono";
+  line-height: 1.6;
+  color: var(--gray);
+  margin-top: 24px;
 }
 .login-gate {
   position: fixed;
