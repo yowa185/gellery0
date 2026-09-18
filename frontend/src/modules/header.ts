@@ -1,13 +1,6 @@
-import { initializeCart, REQUEST_KEY } from './cart';
-import { LISTING_KEY } from './sell-form';
-import { formatPrice, type ArtworkStatus } from './artworks';
-
-type SoldListing = { id: string; title: string; price: string; imageUrl: string; status: ArtworkStatus; createdAt?: string };
-type BoughtRequest = { id: string; title: string; artist: string; price: string; image: string; createdAt?: string };
-
-function sortByRecency<T extends { createdAt?: string }>(items: T[]): T[] {
-  return [...items].sort((a, b) => new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime());
-}
+import { initializeCart } from './cart';
+import { getMyListings, formatPrice, type Artwork } from './artworks';
+import { getMyPurchases, type Purchase } from './purchases';
 
 export function initializeHeader(): void {
   const header = document.querySelector<HTMLElement>('.header');
@@ -29,14 +22,14 @@ function emptyState(message: string): string {
   return `<div class="cart-empty"><span>○</span><p>${message}</p></div>`;
 }
 
-function renderSoldList(items: SoldListing[]): string {
+function renderSoldList(items: Artwork[]): string {
   if (!items.length) return emptyState('出品した作品はまだありません。');
-  return sortByRecency(items).map((item) => listRow(item.id, item.imageUrl, item.title, formatPrice({ price: Number(item.price), status: item.status }), item.status)).join('');
+  return items.map((item) => listRow(item.id, item.image, item.title, formatPrice(item), item.status)).join('');
 }
 
-function renderBoughtList(items: BoughtRequest[]): string {
+function renderBoughtList(items: Purchase[]): string {
   if (!items.length) return emptyState('購入をリクエストした作品はまだありません。');
-  return sortByRecency(items).map((item) => listRow(item.id, item.image, item.title, `${item.artist} · ${item.price}`, 'REQUESTED')).join('');
+  return items.map((item) => listRow(item.artworkId, item.image, item.title, `${item.artist} · ¥ ${item.price.toLocaleString()}`, item.status)).join('');
 }
 
 function createProfilePanel(trigger: HTMLButtonElement): void {
@@ -51,14 +44,20 @@ function createProfilePanel(trigger: HTMLButtonElement): void {
   backdrop.setAttribute('aria-label', '閉じる');
   document.body.append(backdrop);
 
-  function render(): void {
-    const sold: SoldListing[] = JSON.parse(localStorage.getItem(LISTING_KEY) ?? '[]');
-    const bought: BoughtRequest[] = JSON.parse(localStorage.getItem(REQUEST_KEY) ?? '[]');
-    panel.querySelector('.profile-sold')!.innerHTML = renderSoldList(sold);
-    panel.querySelector('.profile-bought')!.innerHTML = renderBoughtList(bought);
+  async function render(): Promise<void> {
+    try {
+      const [sold, bought] = await Promise.all([getMyListings(), getMyPurchases()]);
+      panel.querySelector('.profile-sold')!.innerHTML = renderSoldList(sold);
+      panel.querySelector('.profile-bought')!.innerHTML = renderBoughtList(bought);
+    } catch (error) {
+      console.error(error);
+      const message = emptyState('読み込めませんでした。バックエンドサーバーをご確認ください。');
+      panel.querySelector('.profile-sold')!.innerHTML = message;
+      panel.querySelector('.profile-bought')!.innerHTML = '';
+    }
   }
 
-  const open = () => { render(); document.body.classList.add('profile-open'); };
+  const open = () => { void render(); document.body.classList.add('profile-open'); };
   const close = () => document.body.classList.remove('profile-open');
   trigger.addEventListener('click', open);
   panel.querySelector('.panel-close')?.addEventListener('click', close);

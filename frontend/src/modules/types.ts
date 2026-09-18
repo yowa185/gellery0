@@ -4,5 +4,4 @@ export type CartItem = {
   artist: string;
   price: string;
   image: string;
-  createdAt?: string;
 };

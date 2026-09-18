@@ -261,14 +261,16 @@ h2 em {
   display: block;
   overflow: hidden;
 }
-.work-grid img {
+.work-grid img,
+.work-grid video {
   width: 100%;
   aspect-ratio: 0.76;
   object-fit: cover;
   filter: grayscale(1);
   transition: filter 0.3s;
 }
-.work-grid a:hover img {
+.work-grid a:hover img,
+.work-grid a:hover video {
   filter: grayscale(0);
 }
 .work-grid article > div {
@@ -315,7 +317,8 @@ h2 em {
   padding: 5vw 6vw 5vw 0;
   border-right: 1px solid var(--line);
 }
-.artwork-image img {
+.artwork-image img,
+.artwork-image video {
   width: 100%;
   max-height: 720px;
   object-fit: cover;
@@ -380,38 +383,6 @@ dd {
 }
 .artwork-description:empty {
   display: none;
-}
-.artist-list {
-  margin-top: 90px;
-  border-top: 1px solid var(--line);
-}
-.artist-list a {
-  display: grid;
-  grid-template-columns: 220px 1fr;
-  text-decoration: none;
-  align-items: center;
-  border-bottom: 1px solid var(--line);
-  padding: 25px 0;
-  gap: 38px;
-}
-.artist-list img {
-  width: 220px;
-  height: 120px;
-  object-fit: cover;
-  filter: grayscale(1);
-}
-.artist-list div {
-  position: relative;
-}
-.artist-list span,
-.artist-list p {
-  font: 10px "DM Mono";
-  letter-spacing: 0.06em;
-  color: var(--gray);
-}
-.artist-list h2 {
-  font: 500 37px "Playfair Display";
-  margin: 6px 0;
 }
 .about {
   padding: 13vw 11vw 15vw;
@@ -542,20 +513,6 @@ footer small {
   }
   .artwork-info {
     padding: 30px 0;
-  }
-  .artist-list {
-    margin-top: 60px;
-  }
-  .artist-list a {
-    grid-template-columns: 110px 1fr;
-    gap: 18px;
-  }
-  .artist-list img {
-    width: 110px;
-    height: 95px;
-  }
-  .artist-list h2 {
-    font-size: 28px;
   }
   .about {
     padding: 100px 22px;
@@ -701,9 +658,13 @@ footer small {
   object-fit: cover;
   filter: grayscale(1);
 }
+.cart-item > div {
+  min-width: 0;
+}
 .cart-item p {
   margin: 0 0 8px;
   font-size: 14px;
+  overflow-wrap: break-word;
 }
 .cart-item small,
 .cart-note,

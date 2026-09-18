@@ -8,5 +8,5 @@ initializeHeader();
 initializeSellForm();
 
 const page = document.body.dataset.page;
-if (page === 'collection') renderCollection();
-if (page === 'artwork') renderArtworkDetail();
+if (page === 'collection') void renderCollection();
+if (page === 'artwork') void renderArtworkDetail();

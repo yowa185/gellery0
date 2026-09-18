@@ -1,4 +1,4 @@
-import { LISTING_KEY } from './sell-form';
+import { api } from '../lib/api';
 
 export type ArtworkStatus = 'ON_SALE' | 'RESERVED' | 'SOLD';
 
@@ -15,106 +15,97 @@ export type Artwork = {
   material?: string;
   width?: number;
   height?: number;
-  createdAt: string;
+  shipping?: string;
+  own?: boolean;
 };
 
-const STATIC_ARTWORKS: Artwork[] = [
-  {
-    id: 'blue-room',
-    title: 'Blue Room',
-    artist: 'キム・ダヘ',
-    price: 800000,
-    image: 'https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&w=1400&q=85',
-    category: 'PAINTING',
-    status: 'ON_SALE',
-    productionYear: 2024,
-    material: 'キャンバスに油彩',
-    width: 53,
-    height: 45.5,
-    createdAt: '2024-01-04T00:00:00.000Z',
-  },
-  {
-    id: 'soft-geometry',
-    title: 'Soft Geometry',
-    artist: 'パク・ソユン',
-    price: 1200000,
-    image: 'https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=1400&q=85',
-    category: 'OBJECT',
-    status: 'ON_SALE',
-    productionYear: 2024,
-    createdAt: '2024-01-03T00:00:00.000Z',
-  },
-  {
-    id: 'a-quiet-day',
-    title: 'A Quiet Day',
-    artist: 'イ・ミンジュ',
-    price: 0,
-    image: 'https://images.unsplash.com/photo-1544967082-d9d25d867d66?auto=format&fit=crop&w=1400&q=85',
-    category: 'PHOTOGRAPHY',
-    status: 'SOLD',
-    productionYear: 2023,
-    createdAt: '2024-01-02T00:00:00.000Z',
-  },
-  {
-    id: 'light-in-between',
-    title: 'Light in Between',
-    artist: 'ハン・ジユ',
-    price: 950000,
-    image: 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?auto=format&fit=crop&w=1400&q=85',
-    category: 'PAINTING',
-    status: 'ON_SALE',
-    productionYear: 2024,
-    createdAt: '2024-01-01T00:00:00.000Z',
-  },
-];
-
-type StoredListing = {
-  id: string;
+export type ArtworkInput = {
   title: string;
-  artist?: string;
-  price: string;
-  category: string;
-  productionYear?: string;
-  material?: string;
-  width?: string;
-  height?: string;
-  imageUrl: string;
+  artistName: string;
   description?: string;
-  status: ArtworkStatus;
-  createdAt?: string;
+  price: number;
+  width?: number;
+  height?: number;
+  material?: string;
+  productionYear?: number;
+  category: string;
+  imageUrl: string;
+  shippingInfo?: string;
 };
 
-function getStoredListings(): Artwork[] {
-  const raw: StoredListing[] = JSON.parse(localStorage.getItem(LISTING_KEY) ?? '[]');
-  return raw.map((item) => ({
-    id: item.id,
-    title: item.title,
-    artist: item.artist || 'GALLERY 0 VISITOR',
-    price: Number(item.price) || 0,
-    image: item.imageUrl,
-    category: item.category,
-    status: item.status,
-    description: item.description,
-    productionYear: item.productionYear ? Number(item.productionYear) : undefined,
-    material: item.material,
-    width: item.width ? Number(item.width) : undefined,
-    height: item.height ? Number(item.height) : undefined,
-    createdAt: item.createdAt ?? new Date(0).toISOString(),
-  }));
+type ArtworkSummaryResponse = {
+  id: number;
+  title: string;
+  artistName: string;
+  price: number;
+  imageUrl: string;
+  category: string;
+  status: ArtworkStatus;
+  productionYear: number | null;
+};
+
+type ArtworkDetailResponse = ArtworkSummaryResponse & {
+  description: string | null;
+  width: number | null;
+  height: number | null;
+  material: string | null;
+  shippingInfo: string | null;
+  own: boolean;
+};
+
+function fromSummary(dto: ArtworkSummaryResponse): Artwork {
+  return {
+    id: String(dto.id),
+    title: dto.title,
+    artist: dto.artistName,
+    price: dto.price,
+    image: dto.imageUrl,
+    category: dto.category,
+    status: dto.status,
+    productionYear: dto.productionYear ?? undefined,
+  };
 }
 
-export function getAllArtworks(): Artwork[] {
-  return [...STATIC_ARTWORKS, ...getStoredListings()]
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+function fromDetail(dto: ArtworkDetailResponse): Artwork {
+  return {
+    ...fromSummary(dto),
+    description: dto.description ?? undefined,
+    width: dto.width ?? undefined,
+    height: dto.height ?? undefined,
+    material: dto.material ?? undefined,
+    shipping: dto.shippingInfo ?? undefined,
+    own: dto.own,
+  };
 }
 
-export function getArtworkById(id: string): Artwork | undefined {
-  return getAllArtworks().find((artwork) => artwork.id === id);
+export async function getAllArtworks(category?: string): Promise<Artwork[]> {
+  const query = category && category !== 'all' ? `?category=${encodeURIComponent(category)}` : '';
+  const artworks = await api.get<ArtworkSummaryResponse[]>(`/artworks${query}`);
+  return artworks.map(fromSummary);
 }
 
-export function isOwnListing(id: string): boolean {
-  const raw: StoredListing[] = JSON.parse(localStorage.getItem(LISTING_KEY) ?? '[]');
-  return raw.some((item) => item.id === id);
+export async function getMyListings(): Promise<Artwork[]> {
+  const artworks = await api.get<ArtworkSummaryResponse[]>('/artworks/mine');
+  return artworks.map(fromSummary);
+}
+
+export async function getArtworkById(id: string): Promise<Artwork | undefined> {
+  try {
+    const dto = await api.get<ArtworkDetailResponse>(`/artworks/${id}`);
+    return fromDetail(dto);
+  } catch {
+    return undefined;
+  }
+}
+
+export async function createArtwork(input: ArtworkInput): Promise<Artwork> {
+  const dto = await api.post<ArtworkDetailResponse>('/artworks', input);
+  return fromDetail(dto);
+}
+
+export async function updateArtwork(id: string, input: ArtworkInput): Promise<Artwork> {
+  const dto = await api.put<ArtworkDetailResponse>(`/artworks/${id}`, input);
+  return fromDetail(dto);
 }
 
 export function formatPrice(artwork: Pick<Artwork, 'price' | 'status'>): string {

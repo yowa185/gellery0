@@ -1,8 +1,8 @@
 import type { CartItem } from './types';
 import { showToast } from './toast';
+import { requestPurchase } from './purchases';
 
 const CART_KEY = 'gallery0-cart';
-export const REQUEST_KEY = 'gallery0-requests';
 
 const getCart = (): CartItem[] => JSON.parse(localStorage.getItem(CART_KEY) ?? '[]');
 const saveCart = (items: CartItem[]): void => localStorage.setItem(CART_KEY, JSON.stringify(items));
@@ -21,15 +21,33 @@ function renderCart(): void {
     button.addEventListener('click', () => { saveCart(getCart().filter((item) => item.id !== button.dataset.id)); renderCart(); });
   });
   content.querySelector<HTMLButtonElement>('.cart-request')?.addEventListener('click', () => {
-    const itemsToRequest = getCart();
-    if (!itemsToRequest.length) return;
-    const requestedAt = new Date().toISOString();
-    const existingRequests: CartItem[] = JSON.parse(localStorage.getItem(REQUEST_KEY) ?? '[]');
-    const newRequests = itemsToRequest.map((item) => ({ ...item, createdAt: requestedAt }));
-    localStorage.setItem(REQUEST_KEY, JSON.stringify([...existingRequests, ...newRequests]));
-    saveCart([]); renderCart(); closeCart();
-    showToast(`${itemsToRequest.length}点の購入リクエストを送信しました。`);
+    void submitCartRequests();
   });
+}
+
+async function submitCartRequests(): Promise<void> {
+  const items = getCart();
+  if (!items.length) return;
+
+  const succeeded: string[] = [];
+  for (const item of items) {
+    try {
+      await requestPurchase(item.id);
+      succeeded.push(item.id);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  saveCart(items.filter((item) => !succeeded.includes(item.id)));
+  renderCart();
+
+  if (succeeded.length) {
+    closeCart();
+    showToast(`${succeeded.length}点の購入リクエストを送信しました。`);
+  } else {
+    showToast('購入リクエストの送信に失敗しました。バックエンドサーバーをご確認ください。');
+  }
 }
 
 export function initializeCart(actions: HTMLElement): void {

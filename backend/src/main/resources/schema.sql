@@ -18,6 +18,7 @@ CREATE TABLE artworks (
     id BIGSERIAL PRIMARY KEY,
     seller_id BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
     title VARCHAR(200) NOT NULL,
+    artist_name VARCHAR(100) NOT NULL,
     description TEXT,
     price NUMERIC(12, 0) NOT NULL CHECK (price >= 0),
     width NUMERIC(8, 2) CHECK (width > 0),
@@ -27,6 +28,7 @@ CREATE TABLE artworks (
     category VARCHAR(50) NOT NULL
         CHECK (category IN ('PAINTING', 'PHOTOGRAPHY', 'OBJECT', 'VIDEO')),
     image_url VARCHAR(1000) NOT NULL,
+    shipping_info VARCHAR(500),
     status VARCHAR(20) NOT NULL DEFAULT 'ON_SALE'
         CHECK (status IN ('ON_SALE', 'RESERVED', 'SOLD')),
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
