@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
     List<Purchase> findByBuyerOrderByCreatedAtDesc(User buyer);
+
+    boolean existsByArtworkId(Long artworkId);
 }

@@ -9,6 +9,7 @@ import com.gallery0.demo.service.VisitorService;
 import com.gallery0.demo.web.dto.PurchaseRequest;
 import com.gallery0.demo.web.dto.PurchaseSummary;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,13 +42,19 @@ public class PurchaseController {
     }
 
     @PostMapping
+    @Transactional
     public PurchaseSummary create(@RequestBody PurchaseRequest request,
                                    @RequestHeader("X-Visitor-Token") String visitorToken) {
         Artwork artwork = artworkRepository.findById(request.artworkId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        if (!"ON_SALE".equals(artwork.getStatus())) {
+
+        // Atomic conditional update: only one concurrent request can flip ON_SALE -> RESERVED.
+        int reserved = artworkRepository.reserveIfOnSale(artwork.getId());
+        if (reserved == 0) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Artwork is not available");
         }
+        artwork.setStatus("RESERVED");
+
         User buyer = visitorService.resolve(visitorToken);
 
         Purchase purchase = new Purchase();
@@ -55,9 +62,6 @@ public class PurchaseController {
         purchase.setBuyer(buyer);
         purchase.setPrice(artwork.getPrice());
         purchaseRepository.save(purchase);
-
-        artwork.setStatus("RESERVED");
-        artworkRepository.save(artwork);
 
         return toSummary(purchase);
     }

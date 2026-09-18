@@ -1,15 +1,22 @@
 import { getAllArtworks, formatPrice, type Artwork } from './artworks';
 import { showToast } from './toast';
+import { escapeHtml } from '../lib/escapeHtml';
 
 function cardHtml(artwork: Artwork): string {
+  const title = escapeHtml(artwork.title);
+  const artist = escapeHtml(artwork.artist);
+  const image = escapeHtml(artwork.image);
+  const category = escapeHtml(artwork.category);
   const priceLabel = artwork.status === 'SOLD'
     ? '<b class="sold">SOLD</b>'
-    : `<b>${formatPrice(artwork)}</b>`;
-  const meta = artwork.productionYear ? `${artwork.artist} / ${artwork.productionYear}` : artwork.artist;
+    : artwork.status === 'RESERVED'
+      ? '<b class="reserved">RESERVED</b>'
+      : `<b>${formatPrice(artwork)}</b>`;
+  const meta = artwork.productionYear ? `${artist} / ${artwork.productionYear}` : artist;
   const media = artwork.category === 'VIDEO'
-    ? `<video src="${artwork.image}" muted loop autoplay playsinline></video>`
-    : `<img src="${artwork.image}" alt="${artwork.title}" />`;
-  return `<article data-category="${artwork.category}"><a href="/artwork.html?id=${artwork.id}">${media}</a><div><h2>${artwork.title}</h2><p>${meta}</p>${priceLabel}</div></article>`;
+    ? `<video src="${image}" muted loop autoplay playsinline></video>`
+    : `<img src="${image}" alt="${title}" />`;
+  return `<article data-category="${category}"><a href="/artwork.html?id=${artwork.id}">${media}</a><div><h2>${title}</h2><p>${meta}</p>${priceLabel}</div></article>`;
 }
 
 function attachFilters(): void {

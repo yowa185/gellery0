@@ -108,6 +108,10 @@ export async function updateArtwork(id: string, input: ArtworkInput): Promise<Ar
   return fromDetail(dto);
 }
 
+export async function deleteArtwork(id: string): Promise<void> {
+  await api.delete<void>(`/artworks/${id}`);
+}
+
 export function formatPrice(artwork: Pick<Artwork, 'price' | 'status'>): string {
   return artwork.status === 'SOLD' ? 'SOLD' : `¥ ${artwork.price.toLocaleString()}`;
 }

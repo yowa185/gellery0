@@ -1,6 +1,8 @@
-import { getArtworkById, formatPrice } from './artworks';
+import { getArtworkById, deleteArtwork, formatPrice } from './artworks';
+import { ApiError } from '../lib/api';
 import { addToCart } from './cart';
 import { showToast } from './toast';
+import { escapeHtml } from '../lib/escapeHtml';
 
 export async function renderArtworkDetail(): Promise<void> {
   const id = new URLSearchParams(location.search).get('id');
@@ -37,7 +39,7 @@ export async function renderArtworkDetail(): Promise<void> {
   if (heading) heading.textContent = artwork.title;
 
   const artistLink = document.querySelector('.artist-link');
-  if (artistLink) artistLink.innerHTML = `${artwork.artist} <span>↗</span>`;
+  if (artistLink) artistLink.innerHTML = `${escapeHtml(artwork.artist)} <span>↗</span>`;
 
   const price = document.querySelector('.price');
   if (price) price.innerHTML = `${formatPrice(artwork)} <small>税込</small>`;
@@ -59,6 +61,7 @@ export async function renderArtworkDetail(): Promise<void> {
     if (artwork.own) {
       button.textContent = '編集する  →';
       button.addEventListener('click', () => { location.href = `/sell.html?id=${artwork.id}`; });
+      addDeleteButton(button, artwork.id);
     } else if (artwork.status !== 'ON_SALE') {
       button.style.display = 'none';
     } else {
@@ -71,5 +74,36 @@ export async function renderArtworkDetail(): Promise<void> {
         image: artwork.image,
       }));
     }
+  }
+}
+
+function addDeleteButton(editButton: HTMLButtonElement, artworkId: string): void {
+  const deleteButton = document.createElement('button');
+  deleteButton.type = 'button';
+  deleteButton.className = 'button button-danger';
+  deleteButton.innerHTML = '削除する  <b>×</b>';
+  editButton.insertAdjacentElement('afterend', deleteButton);
+
+  deleteButton.addEventListener('click', () => {
+    void handleDelete(artworkId, deleteButton);
+  });
+}
+
+async function handleDelete(artworkId: string, deleteButton: HTMLButtonElement): Promise<void> {
+  if (!window.confirm('この作品を削除しますか?この操作は取り消せません。')) return;
+
+  deleteButton.disabled = true;
+  try {
+    await deleteArtwork(artworkId);
+    showToast('作品を削除しました。');
+    location.href = '/collection.html';
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 409) {
+      showToast('購入リクエストが入っている作品は削除できません。');
+    } else {
+      console.error(error);
+      showToast('削除に失敗しました。バックエンドサーバーをご確認ください。');
+    }
+    deleteButton.disabled = false;
   }
 }

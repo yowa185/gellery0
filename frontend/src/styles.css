@@ -210,6 +210,7 @@ h2 em {
   font: 10px "DM Mono";
   letter-spacing: 0.06em;
   margin: 14px 0;
+  text-transform: uppercase;
 }
 .preview-card p span {
   color: var(--gray);
@@ -295,7 +296,8 @@ h2 em {
   color: var(--white);
   font-weight: 400;
 }
-.work-grid .sold {
+.work-grid .sold,
+.work-grid .reserved {
   color: #777;
 }
 .artwork-page {
@@ -369,6 +371,12 @@ dd {
 }
 .artwork-info .button b {
   float: right;
+}
+.button-danger {
+  background: transparent;
+  color: #c77;
+  border: 1px solid #6b3a3a;
+  margin-top: 12px;
 }
 .notice {
   color: var(--gray);

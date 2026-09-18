@@ -3,11 +3,13 @@ package com.gallery0.demo.web;
 import com.gallery0.demo.domain.Artwork;
 import com.gallery0.demo.domain.User;
 import com.gallery0.demo.repository.ArtworkRepository;
+import com.gallery0.demo.repository.PurchaseRepository;
 import com.gallery0.demo.service.VisitorService;
 import com.gallery0.demo.web.dto.ArtworkDetail;
 import com.gallery0.demo.web.dto.ArtworkRequest;
 import com.gallery0.demo.web.dto.ArtworkSummary;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -26,10 +29,13 @@ import java.util.List;
 public class ArtworkController {
 
     private final ArtworkRepository artworkRepository;
+    private final PurchaseRepository purchaseRepository;
     private final VisitorService visitorService;
 
-    public ArtworkController(ArtworkRepository artworkRepository, VisitorService visitorService) {
+    public ArtworkController(ArtworkRepository artworkRepository, PurchaseRepository purchaseRepository,
+                              VisitorService visitorService) {
         this.artworkRepository = artworkRepository;
+        this.purchaseRepository = purchaseRepository;
         this.visitorService = visitorService;
     }
 
@@ -79,6 +85,20 @@ public class ArtworkController {
         applyRequest(artwork, request);
         artworkRepository.save(artwork);
         return toDetail(artwork, true);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id, @RequestHeader("X-Visitor-Token") String visitorToken) {
+        Artwork artwork = findOrThrow(id);
+        User visitor = visitorService.resolve(visitorToken);
+        if (!artwork.getSeller().getId().equals(visitor.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not your listing");
+        }
+        if (purchaseRepository.existsByArtworkId(id)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Artwork already has purchase requests");
+        }
+        artworkRepository.delete(artwork);
     }
 
     private Artwork findOrThrow(Long id) {

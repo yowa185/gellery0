@@ -1,6 +1,7 @@
 import { initializeCart } from './cart';
 import { getMyListings, formatPrice, type Artwork } from './artworks';
 import { getMyPurchases, type Purchase } from './purchases';
+import { escapeHtml } from '../lib/escapeHtml';
 
 export function initializeHeader(): void {
   const header = document.querySelector<HTMLElement>('.header');
@@ -15,7 +16,11 @@ export function initializeHeader(): void {
 }
 
 function listRow(id: string, image: string, title: string, meta: string, status: string): string {
-  return `<a class="cart-item" href="/artwork.html?id=${id}"><img src="${image}" alt="${title}"><div><p>${title}</p><small>${meta}</small></div><span class="cart-item-status">${status}</span></a>`;
+  const safeImage = escapeHtml(image);
+  const safeTitle = escapeHtml(title);
+  const safeMeta = escapeHtml(meta);
+  const safeStatus = escapeHtml(status);
+  return `<a class="cart-item" href="/artwork.html?id=${id}"><img src="${safeImage}" alt="${safeTitle}"><div><p>${safeTitle}</p><small>${safeMeta}</small></div><span class="cart-item-status">${safeStatus}</span></a>`;
 }
 
 function emptyState(message: string): string {
